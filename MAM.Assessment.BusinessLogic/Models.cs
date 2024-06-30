@@ -44,8 +44,8 @@ namespace MAM.Assessment.BusinessLogic.Models
         {
             foreach (var item in Items)
             {
-                var basicTax = _taxCalculator.CalculateBasicTax(item);
-                var importDuty = _taxCalculator.CalculateImportDuty(item);
+                var basicTax = TaxCalculator.CalculateBasicTax(item);
+                var importDuty = TaxCalculator.CalculateImportDuty(item);
                 var totalTax = basicTax + importDuty;
 
                 item.Price += totalTax;

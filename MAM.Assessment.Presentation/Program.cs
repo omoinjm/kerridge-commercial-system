@@ -1,51 +1,61 @@
 ﻿using MAM.Assessment.BusinessLogic.Models;
-
+using System.Text.RegularExpressions;
 
 class Program
 {
     static void Main(string[] args)
     {
-        // List<string> input1 = new List<string>
-        // {
-        //     "1 Book at 12.49",
-        //     "1 Music CD at 14.99",
-        //     "1 Chocolate bar at 0.85"
-        // };
+        var input = ReadValidInputLines();
 
-        // List<string> input2 = new List<string>
-        // {
-        //     "1 Imported box of chocolates at 10.00",
-        //     "1 Imported bottle of perfume at 47.50"
-        // };
-
-        // List<string> input3 = new List<string>
-        // {
-        //     "1 Imported bottle of perfume at 27.99",
-        //     "1 Bottle of perfume at 18.99",
-        //     "1 Packet of paracetamol at 9.75",
-        //     "1 Box of imported chocolates at 11.25"
-        // };
-
-        List<string> input = new List<string>();
-        string line;
-
-        Console.WriteLine("Enter receipt items (press Enter twice to finish):");
+        if (input.Count == 0)
+        {
+            Console.WriteLine("No valid input provided. Exiting.");
+            return;
+        }
 
         try
         {
-            while (!string.IsNullOrWhiteSpace(line = Console.ReadLine()))
-                input.Add(line);
-
-            // Remove the last empty string from the list
-            input.RemoveAt(input.Count - 1);
-
             var receipt = new ReceiptModel(input);
             receipt.PrintReceipt();
+        }
+        catch (FormatException ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}. Please check your input format and try again.");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
+    }
+
+    // Method to read and validate input lines
+    static List<string> ReadValidInputLines()
+    {
+        var input = new List<string>();
+        string line;
+
+        Console.WriteLine("Enter receipt items (press Enter twice to finish):");
+
+        while (!string.IsNullOrWhiteSpace(line = Console.ReadLine()))
+        {
+            if (IsValidInputLine(line))
+            {
+                input.Add(line);
+            }
+            else
+            {
+                Console.WriteLine($"Invalid input format: '{line}'. Please use the format '<quantity> <item> at <price>'.");
+            }
+        }
+
+        return input;
+    }
+
+    // Method to validate input line format
+    static bool IsValidInputLine(string line)
+    {
+        var match = Regex.Match(line, @"(\d+) (.+) at (\d+\.\d+)");
+        return match.Success;
     }
 }
 
