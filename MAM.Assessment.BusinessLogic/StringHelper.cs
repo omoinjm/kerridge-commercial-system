@@ -17,6 +17,7 @@ public class StringHelper
         foreach (var item in items)
         {
             // Use a regular expression to match the format "<quantity> <item> at <price>"
+            // https://stackoverflow.com/questions/4734116/find-and-extract-a-number-from-a-string
             var match = Regex.Match(item, @"(\d+) (.+) at (\d+\.\d+)");
 
             // Check if the regular expression match was successful
@@ -27,7 +28,7 @@ public class StringHelper
                 // Extract the item name from the second capture group as a string
                 string itemName = match.Groups[2].Value;
                 // Extract the price from the third capture group and convert to a double
-                    double price = double.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
+                double price = double.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
 
                 // Check if the item name contains any of the exempted items (case insensitive)
                 bool isExempt = exemptedItems.Any(exempt => itemName.ToLower().Contains(exempt));

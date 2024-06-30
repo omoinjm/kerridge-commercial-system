@@ -20,19 +20,10 @@ namespace MAM.Assessment.BusinessLogic.Models
         public double TotalSalesTax { get; set; }
         public double TotalPrice { get; set; }
 
-        private readonly TaxCalculator _taxCalculator;
+        public ReceiptModel() {}
 
-        // Default constructor
-        public ReceiptModel() 
-        {
-            _taxCalculator = new TaxCalculator();
-        }
-
-        // Constructor that initializes the receipt with a list of item strings
         public ReceiptModel(List<string> items)
         {
-            _taxCalculator = new TaxCalculator();
-
             // Parse the items and calculate totals
             Items = StringHelper.ExtractValueFromString(items);
 
@@ -57,10 +48,8 @@ namespace MAM.Assessment.BusinessLogic.Models
         // Method to print the receipt to the console
         public void PrintReceipt()
         {
-            foreach (var item in Items)
-            {
-                Console.WriteLine($"{item.Quantity} {item.Name}: {item.Price:F2}");
-            }
+            foreach (var item in Items) Console.WriteLine($"{item.Quantity} {item.Name}: {item.Price:F2}");
+            
             Console.WriteLine($"Sales Taxes: {TotalSalesTax:F2}");
             Console.WriteLine($"Total: {TotalPrice:F2}");
         }

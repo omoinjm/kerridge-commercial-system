@@ -12,6 +12,7 @@ namespace MAM.Assessment.BusinessLogic.Service
         public static double CalculateBasicTax(ReceiptItemModel item)
         {
             if (item.IsExempt) return 0;
+
             return RoundUpToNearestFiveCents(item.Price * BasicTaxRate);
         }
 
@@ -19,14 +20,19 @@ namespace MAM.Assessment.BusinessLogic.Service
         public static double CalculateImportDuty(ReceiptItemModel item)
         {
             if (!item.IsImported) return 0;
+
             return RoundUpToNearestFiveCents(item.Price * ImportDutyRate);
         }
 
         // Helper method to round up an amount to the nearest 5 cents
+        // https://stackoverflow.com/questions/2235814/rounding-a-decimal-to-the-nearest-0-05
         private static double RoundUpToNearestFiveCents(double amount)
         {
-            double multiplied = amount * 20;
-            double ceiling = (multiplied - (multiplied % 1)) + (multiplied % 1 > 0 ? 1 : 0);
+            var ceiling = Math.Ceiling(amount * 20);
+            
+            if (ceiling == 0) 
+                return 0;
+            
             return ceiling / 20;
         }
     }
